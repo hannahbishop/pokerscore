@@ -8,11 +8,14 @@ class Card
       @suit = suit
       @value = value
     else
-      raise ArgumentError, "Invalid card specifications. Given suit #{suit} and value #{value}"
+      raise ArgumentError, "Invalid card. Given suit #{suit} and value #{value}"
     end
   end
 
   def ==(other_card)
-    return (other_card.class == Card and suit == other_card.suit and value == other_card.value)
+    result = other_card.class == Card 
+    result = result && other_card.suit == suit
+    result = result && other_card.value == value
+    result
   end
 end
