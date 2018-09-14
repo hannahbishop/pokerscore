@@ -7,7 +7,7 @@ class Card
       @suit = suit
       @value = value
     else
-      raise Exception, "Invalid card specifications. Given suit #{suit} and value #{value}"
+      raise ArgumentError, "Invalid card specifications. Given suit #{suit} and value #{value}"
     end
   end
 end
