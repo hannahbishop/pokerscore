@@ -14,19 +14,19 @@ class TestCard < Minitest::Test
     assert_equal card.suit, :heart
   end
   def test_card_object_rejects_invalid_suit
-    assert_raises Exception do
+    assert_raises ArgumentError do
       card = Card.new(3, :hearts)
     end
   end 
   def test_card_object_rejects_value_too_small
     too_small = $valid_values.min - 1
-    assert_raises Exception do
+    assert_raises ArgumentError do
       card = Card.new(too_small, :heart)
     end
   end
   def test_card_object_rejects_value_too_large
     too_large = $valid_values.max + 1
-    assert_raises Exception do
+    assert_raises ArgumentError do
       card = Card.new(too_large, :heart)
     end
   end
