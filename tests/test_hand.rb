@@ -5,7 +5,7 @@ require File.expand_path('../../lib/card.rb', __FILE__)
 
 class TestHand < Minitest::Test
   VALID_CARDS = [
-      Card.new(1, :heart),
+      Card.new(3, :heart),
       Card.new(5, :spade),
       Card.new(12, :club),
       Card.new(14, :diamond),
@@ -36,11 +36,11 @@ class TestHand < Minitest::Test
 
   def test_hand_class_will_not_accept_duplicate_cards
     duplicate_cards = [
-      Card.new(1, :heart),
+      Card.new(3, :heart), #duplicate
       Card.new(2, :spade),
       Card.new(3, :club),
       Card.new(4, :diamond),
-      Card.new(1, :heart)
+      Card.new(3, :heart) #duplicate
     ]
     
     assert_raises ArgumentError do
