@@ -5,13 +5,13 @@ require File.expand_path('../../lib/card.rb', __FILE__)
 
 class TestHand < Minitest::Test
   VALID_CARDS = [
-      Card.new(3, :heart),
-      Card.new(5, :spade),
-      Card.new(12, :club),
-      Card.new(14, :diamond),
-      Card.new(2, :heart)
-    ]
-    
+    Card.new(3, :heart),
+    Card.new(5, :spade),
+    Card.new(12, :club),
+    Card.new(14, :diamond),
+    Card.new(2, :heart)
+  ]
+
   def test_can_create_hand_class
     hand = Hand.new(VALID_CARDS)
     assert_equal hand.class, Hand
@@ -47,4 +47,35 @@ class TestHand < Minitest::Test
       hand = Hand.new(duplicate_cards)
     end
   end
+
+  def test_hand_can_recognize_mixed_suit_non_straight_cards
+    hand = Hand.new(VALID_CARDS)
+    assert_nil hand.straight[:range]
+    assert_equal hand.straight[:suit], :mixed
+  end
+
+  def test_hand_can_recognize_mixed_suit_straight_cards
+    mixed_straight = [
+      Card.new(3, :heart),
+      Card.new(4, :spade),
+      Card.new(5, :club),
+      Card.new(6, :diamond),
+      Card.new(7, :heart)
+    ]
+    hand = Hand.new(mixed_straight)
+    assert_equal hand.straight[:suit], :mixed
+  end
+    
+  def test_hand_can_recognize_same_suit_straight_cards
+    heart_straight = [
+      Card.new(3, :heart),
+      Card.new(4, :heart),
+      Card.new(5, :heart),
+      Card.new(6, :heart),
+      Card.new(7, :heart)
+    ]
+    hand = Hand.new(heart_straight)
+    assert_equal hand.straight[:suit], :heart
+  end
+
 end
