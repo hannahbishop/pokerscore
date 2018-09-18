@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require 'minitest/color'
-require File.expand_path('../../lib/hand.rb', __FILE__)
-require File.expand_path('../../lib/card.rb', __FILE__)
+require 'lib/pokerscore/hand.rb'
+require 'lib/pokerscore/card.rb'
 
 class TestHand < Minitest::Test
   VALID_CARDS = [

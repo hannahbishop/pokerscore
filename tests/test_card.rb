@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require 'minitest/color'
-require File.expand_path('../../lib/card.rb', __FILE__)
-require File.expand_path('../../const/card_constants.rb', __FILE__)
+require 'lib/pokerscore/card.rb'
+require 'const/card_constants.rb'
 
 class TestCard < Minitest::Test
   def test_can_create_card_object
