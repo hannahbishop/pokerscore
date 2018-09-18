@@ -109,14 +109,14 @@ class TestHand < Minitest::Test
   end
 
   def test_hand_can_recognize_a_triplet
-    contains_two_pair = [
+    contains_triplet = [
       Card.new(3, :heart),
       Card.new(7, :club),
       Card.new(5, :heart),
       Card.new(5, :club),
       Card.new(5, :spade)
     ]
-    hand = Hand.new(contains_two_pair)
+    hand = Hand.new(contains_triplet)
     assert_equal hand.sets[1], [3,7]
     assert_equal hand.sets[2], []
     assert_equal hand.sets[3], [5]
