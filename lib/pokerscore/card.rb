@@ -1,4 +1,4 @@
-require File.expand_path('../../const/card_constants.rb', __FILE__)
+require 'const/card_constants.rb'
 
 class Card
   attr_reader :value, :suit
