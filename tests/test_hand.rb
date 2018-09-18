@@ -78,4 +78,79 @@ class TestHand < Minitest::Test
     assert_equal hand.straight[:suit], :heart
   end
 
+  def test_hand_can_recognize_a_pair
+    contains_pair = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(5, :heart),
+      Card.new(6, :heart),
+      Card.new(7, :heart)
+    ]
+    hand = Hand.new(contains_pair)
+    assert_equal hand.sets[1], [5,6,7]
+    assert_equal hand.sets[2], [3]
+    assert_equal hand.sets[3], []
+    assert_equal hand.sets[4], []
+  end
+
+  def test_hand_can_recognize_two_pair
+    contains_two_pair = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(5, :heart),
+      Card.new(5, :club),
+      Card.new(7, :heart)
+    ]
+    hand = Hand.new(contains_two_pair)
+    assert_equal hand.sets[1], [7]
+    assert_equal hand.sets[2], [3,5]
+    assert_equal hand.sets[3], []
+    assert_equal hand.sets[4], []
+  end
+
+  def test_hand_can_recognize_a_triplet
+    contains_two_pair = [
+      Card.new(3, :heart),
+      Card.new(7, :club),
+      Card.new(5, :heart),
+      Card.new(5, :club),
+      Card.new(5, :spade)
+    ]
+    hand = Hand.new(contains_two_pair)
+    assert_equal hand.sets[1], [3,7]
+    assert_equal hand.sets[2], []
+    assert_equal hand.sets[3], [5]
+    assert_equal hand.sets[4], []
+  end
+
+  def test_hand_can_recognize_a_pair_and_triplet
+    contains_two_pair = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(5, :heart),
+      Card.new(5, :club),
+      Card.new(5, :spade)
+    ]
+    hand = Hand.new(contains_two_pair)
+    assert_equal hand.sets[1], []
+    assert_equal hand.sets[2], [3]
+    assert_equal hand.sets[3], [5]
+    assert_equal hand.sets[4], []
+  end
+
+  def test_hand_can_recognize_a_quadruplet
+    contains_two_pair = [
+      Card.new(3, :heart),
+      Card.new(5, :diamond),
+      Card.new(5, :heart),
+      Card.new(5, :club),
+      Card.new(5, :spade)
+    ]
+    hand = Hand.new(contains_two_pair)
+    assert_equal hand.sets[1], [3]
+    assert_equal hand.sets[2], []
+    assert_equal hand.sets[3], []
+    assert_equal hand.sets[4], [5]
+  end
+
 end

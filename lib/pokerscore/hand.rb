@@ -1,10 +1,11 @@
 class Hand
-  attr_reader :cards, :straight
+  attr_reader :cards, :straight, :sets
   
   def initialize(cards)
     raise ArgumentError if invalid_hand?(cards)
     @cards = cards
     @straight = find_straight(cards)
+    @sets = find_sets(cards)
   end
 
   def invalid_hand?(cards)
@@ -25,5 +26,15 @@ class Hand
       result[:suit] = :mixed if not x.suit == y.suit
     end
     result
+  end
+
+  def find_sets(cards)
+    hash = Hash.new { |h, k| h[k] = [] }
+    unique_values = cards.uniq { |c| c.value }
+    unique_values.each do |u|
+      occurrances = cards.count { |c| c.value == u.value }
+      hash[occurrances] << u.value
+    end
+  hash
   end
 end 
