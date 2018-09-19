@@ -153,4 +153,118 @@ class TestHand < Minitest::Test
     assert_equal hand.sets[4], [5]
   end
 
+  def assert_best_cards_name(cards, name)
+    hand = Hand.new(cards)
+    assert_equal hand.bestcards, name
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_a_high_card
+    contains_high_card = [
+      Card.new(3, :heart),
+      Card.new(4, :club),
+      Card.new(6, :heart),
+      Card.new(8, :heart),
+      Card.new(9, :heart)
+    ]
+    assert_best_cards_name(contains_high_card, :high_card)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_a_pair
+    contains_pair = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(5, :heart),
+      Card.new(6, :heart),
+      Card.new(7, :heart)
+    ]
+    assert_best_cards_name(contains_pair, :pair)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_two_pairs
+    contains_two_pair = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(6, :heart),
+      Card.new(6, :spade),
+      Card.new(7, :heart)
+    ]
+    assert_best_cards_name(contains_two_pair, :two_pair)
+  end
+  
+  def test_hand_correctly_labels_its_best_cards_as_three_of_a_kind
+    contains_three_of_a_kind = [
+      Card.new(2, :heart),
+      Card.new(3, :club),
+      Card.new(6, :heart),
+      Card.new(6, :spade),
+      Card.new(6, :diamond)
+    ]
+    assert_best_cards_name(contains_three_of_a_kind, :three_of_a_kind)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_full_house
+    contains_full_house = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(6, :heart),
+      Card.new(6, :spade),
+      Card.new(6, :diamond)
+    ]
+    assert_best_cards_name(contains_full_house, :full_house)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_four_of_a_kind
+    contains_four_of_a_kind = [
+      Card.new(3, :heart),
+      Card.new(6, :club),
+      Card.new(6, :heart),
+      Card.new(6, :spade),
+      Card.new(6, :diamond)
+    ]
+    assert_best_cards_name(contains_four_of_a_kind, :four_of_a_kind)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_royal_flush
+    contains_royal_flush = [
+      Card.new(11, :heart),
+      Card.new(13, :heart),
+      Card.new(14, :heart),
+      Card.new(10, :heart),
+      Card.new(12, :heart)
+    ]
+    assert_best_cards_name(contains_royal_flush, :royal_flush)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_straight_flush
+    contains_straight_flush = [
+      Card.new(9, :heart),
+      Card.new(12, :heart),
+      Card.new(13, :heart),
+      Card.new(11, :heart),
+      Card.new(10, :heart)
+    ]
+    assert_best_cards_name(contains_straight_flush, :straight_flush)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_straight
+    contains_straight = [
+      Card.new(9, :heart),
+      Card.new(12, :club),
+      Card.new(13, :heart),
+      Card.new(11, :heart),
+      Card.new(10, :heart)
+    ]
+    assert_best_cards_name(contains_straight, :straight)
+  end
+
+  def test_hand_correctly_labels_its_best_cards_as_flush
+    contains_flush = [
+      Card.new(9, :heart),
+      Card.new(3, :heart),
+      Card.new(13, :heart),
+      Card.new(11, :heart),
+      Card.new(10, :heart)
+    ]
+    assert_best_cards_name(contains_flush, :flush)
+  end
 end
