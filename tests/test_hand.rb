@@ -267,4 +267,67 @@ class TestHand < Minitest::Test
     ]
     assert_best_cards_name(contains_flush, :flush)
   end
+
+  def test_compare_operator_is_accurate_when_best_cards_are_different_type
+    contains_flush = [
+      Card.new(9, :heart),
+      Card.new(3, :heart),
+      Card.new(13, :heart),
+      Card.new(11, :heart),
+      Card.new(10, :heart)
+    ]
+    contains_straight = [
+      Card.new(9, :heart),
+      Card.new(12, :club),
+      Card.new(13, :heart),
+      Card.new(11, :heart),
+      Card.new(10, :heart)
+    ]
+    hand1 = Hand.new(contains_flush)
+    hand2 = Hand.new(contains_straight)
+    assert hand1 > hand2
+    assert hand2 < hand1
+  end
+
+  def test_compare_operator_is_accurate_when_best_cards_are_the_same_with_winner
+    pair1 = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(5, :heart),
+      Card.new(6, :heart),
+      Card.new(7, :heart)
+    ]
+    pair2 = [
+      Card.new(3, :heart),
+      Card.new(3, :club),
+      Card.new(4, :heart),
+      Card.new(6, :heart),
+      Card.new(7, :heart)
+    ]
+    hand1 = Hand.new(pair1)
+    hand2 = Hand.new(pair2)
+    assert hand1 > hand2
+    assert hand2 < hand1
+  end
+
+  def test_compare_operator_is_accurate_when_best_cards_are_tied
+    straight1 = [
+      Card.new(9, :heart),
+      Card.new(12, :club),
+      Card.new(13, :heart),
+      Card.new(11, :heart),
+      Card.new(10, :heart)
+    ]
+    straight2 = [
+      Card.new(9, :club),
+      Card.new(12, :heart),
+      Card.new(13, :club),
+      Card.new(11, :club),
+      Card.new(10, :club)
+    ]
+    hand1 = Hand.new(straight1)
+    hand2 = Hand.new(straight2)
+    assert_equal hand1, hand2
+  end
+
 end

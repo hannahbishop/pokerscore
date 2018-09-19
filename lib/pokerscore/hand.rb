@@ -1,5 +1,22 @@
+require './const/hand_constants.rb'
+
 class Hand
+  include Comparable
   attr_reader :cards, :straight, :sets, :bestcards
+
+  def <=>(hand2)
+    if bestcards != hand2.bestcards
+      return $hand_types[bestcards] <=> $hand_types[hand2.bestcards]
+    end
+    values = []
+    hand2_values = []
+    (1..4).each { |i| values += sets[i].sort }
+    (1..4).each { |i| hand2_values += hand2.sets[i].sort }
+    values.each_with_index do |value, i|
+      return value <=> hand2_values[i] if value != hand2_values[i]
+    end
+    return values.last <=> hand2_values.last
+  end
   
   def initialize(cards)
     raise ArgumentError if invalid_hand?(cards)
