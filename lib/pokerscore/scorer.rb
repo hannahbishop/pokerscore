@@ -5,8 +5,8 @@ class Scorer
   attr_reader :winner
   def initialize(cards1, cards2)
     restriction = "Hands must not contain the same cards"
-    cards1.each do |c| 
-      raise ArgumentError.new(restriction) if cards2.include?(c)
+    cards1.each do |card| 
+      raise ArgumentError.new(restriction) if cards2.include?(card)
     end
 
     @hand1 = Hand.new(cards1)
