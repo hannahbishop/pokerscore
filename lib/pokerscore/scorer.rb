@@ -36,11 +36,11 @@ class Scorer
       puts "\n"
 
       case @winner
-      when @hand1
+      when @hand1.cards
         puts "Hand 1 wins!"
       when nil
         puts "It's a tie!"
-      when @hand2
+      when @hand2.cards
         puts "Hand 2 wins!"
       end
   end
