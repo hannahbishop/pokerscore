@@ -10,16 +10,16 @@ class Hand
     end
     values = []
     hand2_values = []
-    (1..4).each { |i| values += sets[i].sort }
-    (1..4).each { |i| hand2_values += hand2.sets[i].sort }
-    values.each_with_index do |value, i|
-      return value <=> hand2_values[i] if value != hand2_values[i]
+    (1..4).each { |index| values += sets[index].sort }
+    (1..4).each { |index| hand2_values += hand2.sets[index].sort }
+    values.each_with_index do |value, index|
+      return value <=> hand2_values[index] if value != hand2_values[index]
     end
     return values.last <=> hand2_values.last
   end
 
   def to_s 
-    cards.map{|c| c.to_s}.join(", ")
+    cards.map{|card| card.to_s}.join(", ")
   end
   
   def initialize(cards)
@@ -31,7 +31,7 @@ class Hand
   end
 
   def invalid_hand?(cards)
-    unique_cards = cards.uniq {|c| [c.suit, c.value]}
+    unique_cards = cards.uniq {|card| [card.suit, card.value]}
     unique_cards.length != 5
   end
 
@@ -39,26 +39,26 @@ class Hand
   private
 
   def find_straight(cards)
-    sorted = cards.sort_by { |c| c.value }
+    sorted = cards.sort_by { |card| card.value }
     result = { 
       :range => sorted.first.value..sorted.last.value,
       :suit => sorted.first.suit
     }
-    sorted.each_cons(2).each do |x,y|
-      result[:range] = nil if not x.value == y.value - 1
-      result[:suit] = :mixed if not x.suit == y.suit
+    sorted.each_cons(2).each do |card, next_card|
+      result[:range] = nil if not card.value == next_card.value - 1
+      result[:suit] = :mixed if not card.suit == next_card.suit
     end
     result
   end
 
   def find_sets(cards)
-    hash = Hash.new { |h, k| h[k] = [] }
-    unique_values = cards.uniq { |c| c.value }
-    unique_values.each do |u|
-      occurrances = cards.count { |c| c.value == u.value }
-      hash[occurrances] << u.value
+    sets = Hash.new { |hash, key| hash[key] = [] }
+    unique_values = cards.uniq{ |card| card.value }.map{ |card| card.value }
+    unique_values.each do |unique_value|
+      occurrances = cards.count { |card| card.value == unique_value }
+      sets[occurrances] << unique_value
     end
-    hash
+    sets
   end
 
   def find_best_cards(cards)
@@ -67,7 +67,7 @@ class Hand
     best = :two_pair if sets[2].length == 2
     best = :three_of_a_kind if sets[3].length == 1
     best = :straight if straight[:range] != nil and straight[:suit] == :mixed
-    best = :flush if cards.each_cons(2).all? { |x,y| x.suit == y.suit }
+    best = :flush if cards.each_cons(2).all? { |card, next_card| card.suit == next_card.suit }
     best = :full_house if sets[3].length == 1 and sets[2].length == 1
     best = :four_of_a_kind if sets[4].length == 1 
     if straight[:suit] != :mixed
