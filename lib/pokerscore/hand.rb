@@ -17,6 +17,10 @@ class Hand
     end
     return values.last <=> hand2_values.last
   end
+
+  def to_s 
+    cards.map{|c| c.to_s}.join(", ")
+  end
   
   def initialize(cards)
     raise ArgumentError if invalid_hand?(cards)
@@ -30,6 +34,7 @@ class Hand
     unique_cards = cards.uniq {|c| [c.suit, c.value]}
     unique_cards.length != 5
   end
+
 
   private
 

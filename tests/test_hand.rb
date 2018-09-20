@@ -330,4 +330,15 @@ class TestHand < Minitest::Test
     assert_equal hand1, hand2
   end
 
+  def test_hand_to_string_returns_all_cards_in_readable_format
+    cards = [
+      Card.new(9, :heart),
+      Card.new(12, :club),
+      Card.new(13, :heart),
+      Card.new(11, :heart),
+      Card.new(10, :heart)
+    ]
+    hand = Hand.new(cards)
+    assert_equal hand.to_s, "9 hearts, Q clubs, K hearts, J hearts, 10 hearts"
+  end
 end

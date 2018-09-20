@@ -12,6 +12,11 @@ class Card
     end
   end
 
+  def to_s
+    readable_value = $face_cards.include?(value) ? $face_cards[value] : value
+    "#{readable_value} #{suit}s"
+  end
+
   def ==(other_card)
     result = other_card.class == Card 
     result = result && other_card.suit == suit

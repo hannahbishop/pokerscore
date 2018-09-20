@@ -52,4 +52,22 @@ class TestCard < Minitest::Test
     refute_equal different_suit1, different_suit2
   end
 
+  def test_card_to_string_method_displays_human_readable_card_description
+    card = Card.new(4, :heart)
+    assert_equal card.to_s, "4 hearts"
+  end
+
+  def test_card_to_string_method_converts_face_cards_to_readable_format
+    ace = Card.new(14, :club)
+    king = Card.new(13, :diamond)
+    queen = Card.new(12, :spade)
+    jack = Card.new(11, :heart)
+    
+    assert_equal ace.to_s, "A clubs"
+    assert_equal king.to_s, "K diamonds"
+    assert_equal queen.to_s, "Q spades"
+    assert_equal jack.to_s, "J hearts"
+
+  end
+
 end
