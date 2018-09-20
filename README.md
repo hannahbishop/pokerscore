@@ -14,7 +14,7 @@ Card values range from 2 to 14:
 Run from the main directory using the following command.
 
 ```
-ruby -I . lib/pokerscore/score.rb
+ruby -I . lib/pokerscore/pokerscore.rb
 ```
 
 #### To Test
