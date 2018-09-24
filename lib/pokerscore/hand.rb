@@ -35,20 +35,24 @@ class Hand
     unique_cards.length != 5
   end
 
+  def flush?
+    flush = true
+    cards.each do |card|
+      flush = false if card.suit != cards.first.suit
+    end
+    flush
+  end
 
   private
 
+
   def find_straight(cards)
     sorted = cards.sort_by { |card| card.value }
-    result = { 
-      :range => sorted.first.value..sorted.last.value,
-      :suit => sorted.first.suit
-    }
+    range = (sorted.first.value..sorted.last.value)
     sorted.each_cons(2).each do |card, next_card|
-      result[:range] = nil if not card.value == next_card.value - 1
-      result[:suit] = :mixed if not card.suit == next_card.suit
+      range = nil if not card.value == next_card.value - 1
     end
-    result
+    range
   end
 
   def find_sets(cards)
@@ -62,17 +66,18 @@ class Hand
   end
 
   def find_best_cards(cards)
+    flush = flush?
     best = :high_card
     best = :pair if sets[2].length == 1
     best = :two_pair if sets[2].length == 2
     best = :three_of_a_kind if sets[3].length == 1
-    best = :straight if straight[:range] != nil and straight[:suit] == :mixed
-    best = :flush if cards.each_cons(2).all? { |card, next_card| card.suit == next_card.suit }
+    best = :straight if straight != nil and !flush
+    best = :flush if flush
     best = :full_house if sets[3].length == 1 and sets[2].length == 1
     best = :four_of_a_kind if sets[4].length == 1 
-    if straight[:suit] != :mixed
-      best = :straight_flush if straight[:range] != nil
-      best = :royal_flush if straight[:range] == (10..14)
+    if flush
+      best = :straight_flush if straight != nil
+      best = :royal_flush if straight == (10..14)
     end
     return best
   end
