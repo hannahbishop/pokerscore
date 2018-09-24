@@ -48,34 +48,45 @@ class TestHand < Minitest::Test
     end
   end
 
-  def test_hand_can_recognize_mixed_suit_non_straight_cards
+  def test_hand_sets_straight_to_nil_if_does_not_contain_straight
     hand = Hand.new(VALID_CARDS)
-    assert_nil hand.straight[:range]
-    assert_equal hand.straight[:suit], :mixed
+    assert_nil hand.straight
   end
 
-  def test_hand_can_recognize_mixed_suit_straight_cards
-    mixed_straight = [
+  def test_hand_sets_straight_to_proper_range_if_contains_straight
+    straight = [
       Card.new(3, :heart),
       Card.new(4, :spade),
       Card.new(5, :club),
       Card.new(6, :diamond),
       Card.new(7, :heart)
     ]
-    hand = Hand.new(mixed_straight)
-    assert_equal hand.straight[:suit], :mixed
+    hand = Hand.new(straight)
+    assert_equal hand.straight, (3..7)
   end
     
-  def test_hand_can_recognize_same_suit_straight_cards
-    heart_straight = [
+  def test_hand_flush_defaults_to_nil
+    no_flush = [
+      Card.new(3, :heart),
+      Card.new(4, :spade),
+      Card.new(9, :club),
+      Card.new(6, :diamond),
+      Card.new(7, :heart)
+    ]
+    hand = Hand.new(no_flush)
+    assert_equal hand.flush?, false
+  end
+
+  def test_hand_flush_is_true_if_hand_contains_flush
+    flush = [
       Card.new(3, :heart),
       Card.new(4, :heart),
-      Card.new(5, :heart),
+      Card.new(9, :heart),
       Card.new(6, :heart),
       Card.new(7, :heart)
     ]
-    hand = Hand.new(heart_straight)
-    assert_equal hand.straight[:suit], :heart
+    hand = Hand.new(flush)
+    assert_equal hand.flush?, true
   end
 
   def test_hand_can_recognize_a_pair
