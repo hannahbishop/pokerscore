@@ -21,7 +21,7 @@ class Hand
   end
 
   def to_s 
-    cards.map{|card| card.to_s}.join(", ")
+    cards.map(&:to_s).join(", ")
   end
   
   def initialize(cards)
@@ -38,11 +38,7 @@ class Hand
   end
 
   def flush?
-    flush = true
-    cards.each do |card|
-      flush = false if card.suit != cards.first.suit
-    end
-    flush
+    cards.map(&:suit).uniq.length == 1
   end
 
   private
@@ -60,7 +56,7 @@ class Hand
 
   def find_sets(cards)
     sets = Hash.new { |hash, key| hash[key] = [] }
-    unique_values = cards.uniq{ |card| card.value }.map{ |card| card.value }
+    unique_values = cards.map(&:value).uniq
     unique_values.each do |unique_value|
       occurrances = cards.count { |card| card.value == unique_value }
       sets[occurrances] << unique_value
