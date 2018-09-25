@@ -48,12 +48,12 @@ class TestHand < Minitest::Test
     end
   end
 
-  def test_hand_sets_straight_to_nil_if_does_not_contain_straight
+  def test_hand_sets_straight_high_card_to_nil_if_does_not_contain_straight
     hand = Hand.new(VALID_CARDS)
-    assert_nil hand.straight
+    assert_nil hand.straight_high_card
   end
 
-  def test_hand_sets_straight_to_proper_range_if_contains_straight
+  def test_hand_sets_straight_high_card_if_contains_straight
     straight = [
       Card.new(3, :heart),
       Card.new(4, :spade),
@@ -62,7 +62,7 @@ class TestHand < Minitest::Test
       Card.new(7, :heart)
     ]
     hand = Hand.new(straight)
-    assert_equal hand.straight, (3..7)
+    assert_equal hand.straight_high_card, 7
   end
     
   def test_hand_flush_defaults_to_nil
@@ -268,6 +268,17 @@ class TestHand < Minitest::Test
     assert_best_cards_name(contains_straight, :straight)
   end
 
+  def test_hand_with_wheel_straight_correctly_labels_its_best_cards_as_straight
+    contains_wheel_straight = [
+      Card.new(2, :heart),
+      Card.new(4, :club),
+      Card.new(3, :heart),
+      Card.new(5, :heart),
+      Card.new(14, :heart)
+    ]
+    assert_best_cards_name(contains_wheel_straight, :straight)
+  end
+
   def test_hand_correctly_labels_its_best_cards_as_flush
     contains_flush = [
       Card.new(9, :heart),
@@ -340,6 +351,26 @@ class TestHand < Minitest::Test
     hand2 = Hand.new(straight2)
     assert_equal hand1, hand2
   end
+
+  def test_compare_operator_wheel_straight_is_less_than_other_straights
+    wheel_straight = [
+      Card.new(2, :heart),
+      Card.new(3, :club),
+      Card.new(4, :heart),
+      Card.new(5, :heart),
+      Card.new(14, :heart)
+    ]
+    straight = [
+      Card.new(2, :heart),
+      Card.new(3, :club),
+      Card.new(4, :heart),
+      Card.new(5, :heart),
+      Card.new(6, :heart)
+    ]
+    hand1 = Hand.new(wheel_straight)
+    hand2 = Hand.new(straight)
+    assert hand1 < hand2
+  end 
 
   def test_hand_to_string_returns_all_cards_in_readable_format
     cards = [

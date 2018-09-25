@@ -2,30 +2,32 @@ require './const/hand_constants.rb'
 
 class Hand
   include Comparable
-  attr_reader :cards, :straight, :sets, :bestcards
+  attr_reader :cards, :straight_high_card, :sets, :bestcards
 
   def <=>(hand2)
     if bestcards != hand2.bestcards
       return $hand_types[bestcards] <=> $hand_types[hand2.bestcards]
     end
+    if straight_high_card != nil
+      return straight_high_card <=> hand2.straight_high_card 
+    end
     values = []
     hand2_values = []
     (1..4).each { |index| values += sets[index].sort }
     (1..4).each { |index| hand2_values += hand2.sets[index].sort }
-    values.each_with_index do |value, index|
-      return value <=> hand2_values[index] if value != hand2_values[index]
+    values.zip(hand2_values).each do |value, hand2_value|
+      return value <=> hand2_value if value != hand2_value
     end
-    return values.last <=> hand2_values.last
   end
 
   def to_s 
-    cards.map{|card| card.to_s}.join(", ")
+    cards.map(&:to_s).join(", ")
   end
   
   def initialize(cards)
     raise ArgumentError if invalid_hand?(cards)
     @cards = cards
-    @straight = find_straight(cards)
+    @straight_high_card = find_straight(cards)
     @sets = find_sets(cards)
     @bestcards = find_best_cards(cards)
   end
@@ -36,28 +38,25 @@ class Hand
   end
 
   def flush?
-    flush = true
-    cards.each do |card|
-      flush = false if card.suit != cards.first.suit
-    end
-    flush
+    cards.map(&:suit).uniq.length == 1
   end
 
   private
 
 
   def find_straight(cards)
-    sorted = cards.sort_by { |card| card.value }
-    range = (sorted.first.value..sorted.last.value)
-    sorted.each_cons(2).each do |card, next_card|
-      range = nil if not card.value == next_card.value - 1
+    sorted_values = cards.map(&:value).sort
+    result = sorted_values.last
+    sorted_values.each_cons(2).each do |value, next_value|
+      result = nil if not value == next_value - 1
     end
-    range
+    result = 5 if sorted_values == [2,3,4,5,14] # wheel straight
+    result
   end
 
   def find_sets(cards)
     sets = Hash.new { |hash, key| hash[key] = [] }
-    unique_values = cards.uniq{ |card| card.value }.map{ |card| card.value }
+    unique_values = cards.map(&:value).uniq
     unique_values.each do |unique_value|
       occurrances = cards.count { |card| card.value == unique_value }
       sets[occurrances] << unique_value
@@ -71,13 +70,13 @@ class Hand
     best = :pair if sets[2].length == 1
     best = :two_pair if sets[2].length == 2
     best = :three_of_a_kind if sets[3].length == 1
-    best = :straight if straight != nil and !flush
+    best = :straight if straight_high_card != nil and !flush
     best = :flush if flush
     best = :full_house if sets[3].length == 1 and sets[2].length == 1
     best = :four_of_a_kind if sets[4].length == 1 
     if flush
-      best = :straight_flush if straight != nil
-      best = :royal_flush if straight == (10..14)
+      best = :straight_flush if straight_high_card != nil
+      best = :royal_flush if straight_high_card == 14
     end
     return best
   end
