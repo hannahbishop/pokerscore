@@ -352,6 +352,26 @@ class TestHand < Minitest::Test
     assert_equal hand1, hand2
   end
 
+  def test_compare_operator_handles_set_versus_set
+    lower_set = [
+      Card.new(3, :club),
+      Card.new(3, :heart),
+      Card.new(3, :spade),
+      Card.new(10, :club),
+      Card.new(9, :club)
+    ]
+    higher_set = [
+      Card.new(5, :heart),
+      Card.new(5, :spade),
+      Card.new(5, :diamond),
+      Card.new(11, :spade),
+      Card.new(8, :club)
+    ]
+    lower_hand = Hand.new(lower_set)
+    higher_hand = Hand.new(higher_set)
+    assert lower_hand < higher_hand
+  end
+
   def test_compare_operator_wheel_straight_is_less_than_other_straights
     wheel_straight = [
       Card.new(2, :heart),

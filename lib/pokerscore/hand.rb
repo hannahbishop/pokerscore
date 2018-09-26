@@ -11,10 +11,8 @@ class Hand
     if straight_high_card != nil
       return straight_high_card <=> hand2.straight_high_card 
     end
-    values = []
-    hand2_values = []
-    (1..4).each { |index| values += sets[index].sort }
-    (1..4).each { |index| hand2_values += hand2.sets[index].sort }
+    values = 4.downto(1).map { |index| sets[index].sort }
+    hand2_values = 4.downto(1).map { |index| hand2.sets[index].sort }
     values.zip(hand2_values).each do |value, hand2_value|
       return value <=> hand2_value if value != hand2_value
     end
