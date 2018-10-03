@@ -1,3 +1,7 @@
+require 'lib/pokerscore/identify_straight'
+require 'lib/pokerscore/identify_flush'
+require 'lib/pokerscore/identify_sets'
+
 module HandEvaluator
 
   def self.winner(hand1, hand2)
@@ -10,21 +14,23 @@ module HandEvaluator
   end
 
   def self.identify(hand)
-    num_pairs = hand.sets.count { |set| set.pair? }
-    num_trips = hand.sets.count { |set| set.trip? }
-    num_quads = hand.sets.count { |set| set.quad? }
+    num_pairs = IdentifySets.sets(hand).count { |set| set.pair? }
+    num_trips = IdentifySets.sets(hand).count { |set| set.trip? }
+    num_quads = IdentifySets.sets(hand).count { |set| set.quad? }
+    straight = IdentifyStraight.straight?(hand)
+    flush = IdentifyFlush.flush?(hand)
 
     best = :high_card
     best = :pair if num_pairs == 1
     best = :two_pair if num_pairs == 2
     best = :three_of_a_kind if num_trips == 1
-    best = :straight if hand.straight? and !hand.flush?
-    best = :flush if hand.flush?
+    best = :straight if straight and !flush
+    best = :flush if flush
     best = :full_house if num_trips == 1 and num_pairs == 1
-    best = :four_of_a_kind if num_quads == 1 
-    if hand.flush?
-      best = :straight_flush if hand.straight?
-      best = :royal_flush if hand.straight? and hand.max_value == 14
+    best = :four_of_a_kind if num_quads == 1
+    if flush
+      best = :straight_flush if straight
+      best = :royal_flush if straight and hand.max_value == 14
     end
     best
   end
@@ -37,7 +43,7 @@ module HandEvaluator
       hand1
     when 0
       nil
-    when -1 
+    when -1
       hand2
     end
   end
@@ -75,10 +81,10 @@ module HandEvaluator
   end
 
   def self.set_values_in_rank_order(hand)
-    quads = hand.sets.select(&:quad?).map(&:value).sort
-    trips = hand.sets.select(&:trip?).map(&:value).sort
-    pairs = hand.sets.select(&:pair?).map(&:value).sort
-    singles = hand.sets.select(&:single?).map(&:value).sort
+    quads = IdentifySets.sets(hand).select(&:quad?).map(&:value).sort
+    trips = IdentifySets.sets(hand).select(&:trip?).map(&:value).sort
+    pairs = IdentifySets.sets(hand).select(&:pair?).map(&:value).sort
+    singles = IdentifySets.sets(hand).select(&:single?).map(&:value).sort
     quads + trips + pairs + singles
   end
 end
