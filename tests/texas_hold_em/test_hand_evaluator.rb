@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require 'minitest/color'
 require 'tests/hand_factories.rb'
-require 'lib/pokerscore/hand_evaluator.rb'
+require 'lib/pokerscore/texas_hold_em/hand_evaluator.rb'
 
 class TestHand < Minitest::Test
   def test_hand_evaluator_accurately_compares_different_hand_types
