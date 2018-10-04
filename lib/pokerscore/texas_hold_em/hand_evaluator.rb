@@ -1,8 +1,9 @@
-require 'lib/pokerscore/identify_straight'
-require 'lib/pokerscore/identify_flush'
 require 'lib/pokerscore/identify_sets'
+require 'lib/pokerscore/texas_hold_em/identifier'
 
 module HandEvaluator
+
+  Identifier = TexasHoldEm::Identifier.new()
 
   def self.winner(hand1, hand2)
     winner = compare_hand_types(hand1, hand2)
@@ -13,32 +14,12 @@ module HandEvaluator
     return winner if winner != nil
   end
 
-  def self.identify(hand)
-    num_pairs = IdentifySets.sets(hand).count { |set| set.pair? }
-    num_trips = IdentifySets.sets(hand).count { |set| set.trip? }
-    num_quads = IdentifySets.sets(hand).count { |set| set.quad? }
-    straight = IdentifyStraight.straight?(hand)
-    flush = IdentifyFlush.flush?(hand)
-
-    best = :high_card
-    best = :pair if num_pairs == 1
-    best = :two_pair if num_pairs == 2
-    best = :three_of_a_kind if num_trips == 1
-    best = :straight if straight and !flush
-    best = :flush if flush
-    best = :full_house if num_trips == 1 and num_pairs == 1
-    best = :four_of_a_kind if num_quads == 1
-    if flush
-      best = :straight_flush if straight
-      best = :royal_flush if straight and hand.max_value == 14
-    end
-    best
-  end
-
   private
 
   def self.compare_hand_types(hand1, hand2)
-    case $hand_types[identify(hand1)] <=> $hand_types[identify(hand2)]
+    hand1_type = $hand_types[Identifier.identify(hand1)]
+    hand2_type = $hand_types[Identifier.identify(hand2)]
+    case hand1_type <=> hand2_type
     when 1
       hand1
     when 0
