@@ -7,6 +7,6 @@ class TestIdentifySets < Minitest::Test
   def test_hand_identifies_sets
     full_house_hand = HandFactories.full_house_hand(triplet = 5, pair = 2)
     identify_sets = IdentifySets.new(full_house_hand)
-    assert_equal identify_sets.sets.length, 2
+    assert_equal identify_sets.call.length, 2
   end
 end
