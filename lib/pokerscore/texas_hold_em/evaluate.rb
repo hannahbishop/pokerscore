@@ -7,8 +7,8 @@ module TexasHoldEm
     def initialize(hand1, hand2)
       @hand1 = hand1
       @hand2 = hand2
-      @identify_hand1 = TexasHoldEm::Identify.new(hand1)
-      @identify_hand2 = TexasHoldEm::Identify.new(hand2)
+      @hand1_type = TexasHoldEm::Identify.new(hand1).call
+      @hand2_type = TexasHoldEm::Identify.new(hand2).call
     end
 
     def call
@@ -23,8 +23,8 @@ module TexasHoldEm
     private
 
     def compare_hand_types
-      hand1_type = $hand_types[@identify_hand1.call]
-      hand2_type = $hand_types[@identify_hand2.call]
+      hand1_type = $hand_types[@hand1_type]
+      hand2_type = $hand_types[@hand2_type]
       case hand1_type <=> hand2_type
       when 1
         @hand1
@@ -68,11 +68,11 @@ module TexasHoldEm
     end
 
     def set_values_in_rank_order(hand)
-      identify_sets = IdentifySets.new(hand)
-      quads = identify_sets.call.select(&:quad?).map(&:value).sort
-      trips = identify_sets.call.select(&:trip?).map(&:value).sort
-      pairs = identify_sets.call.select(&:pair?).map(&:value).sort
-      singles = identify_sets.call.select(&:single?).map(&:value).sort
+      sets = IdentifySets.new(hand).call
+      quads = sets.select(&:quad?).map(&:value).sort
+      trips = sets.select(&:trip?).map(&:value).sort
+      pairs = sets.select(&:pair?).map(&:value).sort
+      singles = sets.select(&:single?).map(&:value).sort
       quads + trips + pairs + singles
     end
   end

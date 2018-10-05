@@ -7,17 +7,17 @@ module TexasHoldEm
 
     def initialize(hand)
       @hand = hand
-      @identify_sets = IdentifySets.new(hand)
-      @identify_flush = IdentifyFlush.new(hand)
-      @identify_straight = IdentifyStraight.new(hand)
+      @sets = IdentifySets.new(hand).call
+      @is_flush = IdentifyFlush.new(hand).call
+      @is_straight = IdentifyStraight.new(hand).call
     end
 
     def call
-      num_pairs = @identify_sets.call.count { |set| set.pair? }
-      num_trips = @identify_sets.call.count { |set| set.trip? }
-      num_quads = @identify_sets.call.count { |set| set.quad? }
-      straight = @identify_straight.call
-      flush = @identify_flush.call
+      num_pairs = @sets.count { |set| set.pair? }
+      num_trips = @sets.count { |set| set.trip? }
+      num_quads = @sets.count { |set| set.quad? }
+      straight = @is_straight
+      flush = @is_flush
 
       best = :high_card
       best = :pair if num_pairs == 1
