@@ -4,7 +4,7 @@ class IdentifyFlush
     @hand = hand
   end
 
-  def flush?
+  def call
     @hand.cards.map(&:suit).uniq.length == 1
   end
 end

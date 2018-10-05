@@ -4,7 +4,7 @@ class IdentifySets
     @hand = hand
   end
 
-  def sets
+  def call
     sets = []
     unique_values = @hand.cards.map(&:value).uniq
     unique_values.each do |unique_value|

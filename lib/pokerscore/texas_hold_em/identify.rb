@@ -12,12 +12,12 @@ module TexasHoldEm
       @identify_straight = IdentifyStraight.new(hand)
     end
 
-    def identify
-      num_pairs = @identify_sets.sets.count { |set| set.pair? }
-      num_trips = @identify_sets.sets.count { |set| set.trip? }
-      num_quads = @identify_sets.sets.count { |set| set.quad? }
-      straight = @identify_straight.straight?
-      flush = @identify_flush.flush?
+    def call
+      num_pairs = @identify_sets.call.count { |set| set.pair? }
+      num_trips = @identify_sets.call.count { |set| set.trip? }
+      num_quads = @identify_sets.call.count { |set| set.quad? }
+      straight = @identify_straight.call
+      flush = @identify_flush.call
 
       best = :high_card
       best = :pair if num_pairs == 1
