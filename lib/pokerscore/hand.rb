@@ -1,6 +1,3 @@
-require 'const/hand_constants.rb'
-require 'lib/pokerscore/set.rb'
-
 class Hand
   attr_reader :cards
 

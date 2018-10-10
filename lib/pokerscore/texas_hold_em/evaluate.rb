@@ -1,5 +1,8 @@
-require 'lib/pokerscore/identify_sets'
 require 'lib/pokerscore/texas_hold_em/identify'
+require 'const/hand_constants.rb'
+require 'lib/pokerscore/pair_search'
+require 'lib/pokerscore/trip_search'
+require 'lib/pokerscore/quad_search'
 
 module TexasHoldEm
   class Evaluate
@@ -17,6 +20,8 @@ module TexasHoldEm
       winner = compare_straights
       return winner if winner != nil
       winner = compare_sets
+      return winner if winner != nil
+      winner = compare_card_values
       return winner if winner != nil
     end
 
@@ -49,6 +54,20 @@ module TexasHoldEm
       end
     end
 
+    def compare_card_values
+      hand1_values = @hand1.cards.map(&:value).uniq
+      hand2_values = @hand2.cards.map(&:value).uniq
+      loop do
+        break if hand1_values.length == 0
+        case hand1_values.shift <=> hand2_values.shift
+        when 1
+          return @hand1
+        when -1
+          return @hand2
+        end
+      end
+    end
+
     def compare_straights
       case straight_high_card(@hand1) <=> straight_high_card(@hand2)
       when 1
@@ -68,12 +87,10 @@ module TexasHoldEm
     end
 
     def set_values_in_rank_order(hand)
-      sets = IdentifySets.new(hand).call
-      quads = sets.select(&:quad?).map(&:value).sort
-      trips = sets.select(&:trip?).map(&:value).sort
-      pairs = sets.select(&:pair?).map(&:value).sort
-      singles = sets.select(&:single?).map(&:value).sort
-      quads + trips + pairs + singles
+      quads = PokerScore::QuadSearch.new.call(hand)
+      trips = PokerScore::TripSearch.new.call(hand)
+      pairs = PokerScore::PairSearch.new.call(hand)
+      quads + trips + pairs
     end
   end
 end
