@@ -3,6 +3,7 @@ require 'const/hand_constants.rb'
 require 'lib/pokerscore/pair_search'
 require 'lib/pokerscore/trip_search'
 require 'lib/pokerscore/quad_search'
+require 'lib/pokerscore/compare_hand_types.rb'
 
 module TexasHoldEm
   class Evaluate
@@ -13,7 +14,7 @@ module TexasHoldEm
     end
 
     def call
-      winner = compare_hand_types
+      winner = CompareHandTypes.new.call(@hand1, @hand2)
       return winner if winner != nil
       winner = compare_straights
       return winner if winner != nil
@@ -24,20 +25,6 @@ module TexasHoldEm
     end
 
     private
-
-    def compare_hand_types
-      identify = TexasHoldEm::Identify.new
-      hand1_type = $hand_types[identify.call(@hand1)]
-      hand2_type = $hand_types[identify.call(@hand2)]
-      case hand1_type <=> hand2_type
-      when 1
-        @hand1
-      when 0
-        nil
-      when -1
-        @hand2
-      end
-    end
 
     def compare_sets
       hand1_set_values = set_values_in_rank_order(@hand1)
