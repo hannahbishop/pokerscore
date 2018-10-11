@@ -10,8 +10,6 @@ module TexasHoldEm
     def initialize(hand1, hand2)
       @hand1 = hand1
       @hand2 = hand2
-      @hand1_type = TexasHoldEm::Identify.new(hand1).call
-      @hand2_type = TexasHoldEm::Identify.new(hand2).call
     end
 
     def call
@@ -28,8 +26,9 @@ module TexasHoldEm
     private
 
     def compare_hand_types
-      hand1_type = $hand_types[@hand1_type]
-      hand2_type = $hand_types[@hand2_type]
+      identify = TexasHoldEm::Identify.new
+      hand1_type = $hand_types[identify.call(@hand1)]
+      hand2_type = $hand_types[identify.call(@hand2)]
       case hand1_type <=> hand2_type
       when 1
         @hand1
