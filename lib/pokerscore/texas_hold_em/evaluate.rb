@@ -1,9 +1,9 @@
 require 'lib/pokerscore/texas_hold_em/identify'
-require 'const/hand_constants.rb'
 require 'lib/pokerscore/pair_search'
 require 'lib/pokerscore/trip_search'
 require 'lib/pokerscore/quad_search'
 require 'lib/pokerscore/compare_hand_types.rb'
+require 'lib/pokerscore/texas_hold_em/hand_values.rb'
 
 module TexasHoldEm
   class Evaluate
@@ -14,7 +14,7 @@ module TexasHoldEm
     end
 
     def call
-      winner = CompareHandTypes.new.call(@hand1, @hand2)
+      winner = CompareHandTypes.new(TexasHoldEm::HandValues).call(@hand1, @hand2)
       return winner if winner != nil
       winner = compare_straights
       return winner if winner != nil
